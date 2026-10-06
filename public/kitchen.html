@@ -1,0 +1,39 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>PizzApp – Kitchen</title><link rel="stylesheet" href="/style.css"></head><body>
+<header class="site-header"><nav class="nav-wrap"><a class="brand" href="/">🍕 PizzApp Kitchen</a><div class="nav-links"><a href="/">Customer page</a></div></nav><div style="max-width:1180px;margin:auto;padding:1.5rem 1.25rem 2rem"><h1 style="margin:0;font-family:Georgia,serif">Kitchen board</h1><p style="color:#d7c8bc">Updates every 3 seconds. Move each order through the kitchen workflow.</p></div></header>
+<div class="board" id="board"></div>
+<script>
+const NAMES={received:'New',preparing:'Preparing',in_oven:'In the oven',ready:'Ready',completed:'Done today'};
+const NEXT={received:['preparing','Start preparing'],preparing:['in_oven','Put in oven'],in_oven:['ready','Mark ready'],ready:['completed','Handed off']};
+const esc=s=>String(s).replace(/[&<>\"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','\"':'&quot;'}[c]));
+function kitchenHeaders(extra={}){const key=sessionStorage.getItem('pizzapp_kitchen_key')||'';return {...extra,...(key?{'X-Kitchen-Key':key}:{})}}
+async function requestKitchen(url,options={}){
+  options.headers=kitchenHeaders(options.headers||{});
+  let r=await fetch(url,options);
+  if(r.status===401){
+    const key=prompt('Enter the kitchen access code:');
+    if(key===null)return null;
+    sessionStorage.setItem('pizzapp_kitchen_key',key);
+    options.headers=kitchenHeaders(options.headers||{});
+    r=await fetch(url,options);
+  }
+  return r;
+}
+async function load(){
+  const r=await requestKitchen('/api/orders'); if(!r)return;
+  if(!r.ok){document.getElementById('board').innerHTML='<div class="msg err">Kitchen access denied.</div>';return}
+  const d=await r.json(), now=Date.now();
+  const b=document.getElementById('board');
+  b.innerHTML=d.statuses.map(s=>{
+    const list=d.orders.filter(o=>o.status===s).sort((a,b)=>a.createdAt<b.createdAt?-1:1).slice(s==='completed'?-5:0);
+    return `<div class="col"><h2>${NAMES[s]} (${list.length})</h2>${list.map(o=>{
+      const mins=Math.floor((now-new Date(o.createdAt))/60000), late=s!=='completed'&&s!=='ready'&&mins>=d.prepMinutes;
+      return `<div class="ticket ${late?'late':''}"><strong>${o.id}</strong> · ${esc(o.name)} · ${o.fulfillment}${o.fulfillment==='delivery'?'<br>'+esc(o.address):''}
+      <br><span class="muted">${mins} min ago${late?' (over '+d.prepMinutes+' min target)':''} · ${esc(o.phone)}</span>
+      <ul>${o.items.map(i=>`<li>${i.qty}× ${i.size} ${i.crust}, cheese${i.toppings.map(t=>' + '+t).join('')}${i.notes?`<div class="note">Request: ${esc(i.notes)}</div>`:''}</li>`).join('')}</ul>
+      ${o.feedback?`<div>Rated ${'★'.repeat(o.feedback.rating)} ${esc(o.feedback.comment||'')}</div>`:''}
+      ${NEXT[s]?`<button class="alt" onclick="move('${o.id}','${NEXT[s][0]}')">${NEXT[s][1]}</button>`:''}</div>`}).join('')||'<p class="muted">No orders.</p>'}</div>`}).join('');
+}
+async function move(id,status){const r=await requestKitchen(`/api/orders/${id}/status`,{method:'PATCH',headers:{'Content-Type':'application/json'},body:JSON.stringify({status})});if(r&&r.ok)load()}
+load();setInterval(load,3000);
+</script></body></html>

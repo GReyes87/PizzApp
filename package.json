@@ -1,0 +1,1 @@
+{"name":"pizzapp","version":"1.1.0","description":"Dorm pizza ordering + kitchen dashboard","main":"server.js","scripts":{"start":"node server.js"}}

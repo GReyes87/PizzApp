@@ -1,0 +1,295 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>PizzApp – Fresh dorm-kitchen pizza</title>
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+<header class="site-header">
+  <nav class="nav-wrap">
+    <a class="brand" href="#top" aria-label="PizzApp home">🍕 PizzApp</a>
+    <div class="nav-links">
+      <a href="#menu">Menu</a>
+      <a href="#builder">Build</a>
+      <a href="#checkout">Checkout</a>
+      <a href="#past-orders">Orders</a>
+    </div>
+  </nav>
+
+  <div class="hero" id="top">
+    <div class="hero-copy">
+      <span class="eyebrow">NOTRE DAME • SOUTH BEND</span>
+      <h1>Hot pizza.<br>Built your way.</h1>
+      <p>Fresh dorm-kitchen pizza ready in about 20 minutes. Pickup or South Bend delivery.</p>
+      <div class="hero-actions">
+        <a class="btn-link" href="#menu">Order now</a>
+        <a class="text-link" href="#track-order">Track an order ↓</a>
+      </div>
+    </div>
+    <div class="hero-image" role="img" aria-label="Fresh pepperoni pizza"></div>
+  </div>
+</header>
+
+<main>
+  <div id="status"></div>
+
+  <section id="menu" class="menu-section">
+    <div class="section-heading">
+      <div>
+        <span class="eyebrow">OUR MENU</span>
+        <h2>Pick a favorite or build your own</h2>
+      </div>
+      <p class="muted">Every pizza includes cheese. Choose a preset and customize it below.</p>
+    </div>
+
+    <div class="menu-grid">
+      <article class="pizza-card">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/1/15/Cheese-pizza-20150207-012.jpg" alt="Cheese pizza">
+        <div class="pizza-card-body">
+          <span class="tag">CLASSIC</span>
+          <h3>Cheese</h3>
+          <p>Simple, melty cheese on your choice of crust.</p>
+          <div class="card-footer"><strong>From $8</strong><button class="ghost preset" data-preset="cheese">Customize</button></div>
+        </div>
+      </article>
+
+      <article class="pizza-card featured-card">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/d/d1/Pepperoni_pizza.jpg" alt="Pepperoni pizza">
+        <div class="pizza-card-body">
+          <span class="tag">MOST POPULAR</span>
+          <h3>Pepperoni</h3>
+          <p>Cheese topped with classic pepperoni.</p>
+          <div class="card-footer"><strong>From $9.50</strong><button class="ghost preset" data-preset="pepperoni">Customize</button></div>
+        </div>
+      </article>
+
+      <article class="pizza-card">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/b/b8/Pizza_Hawaii_02.jpg" alt="Hawaiian pizza">
+        <div class="pizza-card-body">
+          <span class="tag">SWEET + SAVORY</span>
+          <h3>Hawaiian</h3>
+          <p>Ham and pineapple with melted cheese.</p>
+          <div class="card-footer"><strong>From $10.50</strong><button class="ghost preset" data-preset="hawaiian">Customize</button></div>
+        </div>
+      </article>
+
+      <article class="pizza-card build-card">
+        <div class="build-art">🍕</div>
+        <div class="pizza-card-body">
+          <span class="tag">YOUR WAY</span>
+          <h3>Build Your Own</h3>
+          <p>Start with cheese and choose every topping yourself.</p>
+          <div class="card-footer"><strong>From $8</strong><button class="ghost preset" data-preset="custom">Build pizza</button></div>
+        </div>
+      </article>
+    </div>
+  </section>
+
+  <section id="builder" class="builder-section">
+    <div class="section-heading compact">
+      <div>
+        <span class="eyebrow">CUSTOMIZE</span>
+        <h2>Build your pizza</h2>
+      </div>
+      <div class="builder-price"><span>Current price</span><strong id="builderPrice">$0.00</strong></div>
+    </div>
+
+    <div class="form-grid">
+      <div>
+        <label for="size">Size</label>
+        <select id="size"></select>
+      </div>
+      <div>
+        <label for="crust">Crust</label>
+        <select id="crust"></select>
+      </div>
+    </div>
+
+    <label>Toppings <span class="muted">(cheese is included)</span></label>
+    <div class="opts topping-grid" id="toppings"></div>
+
+    <label for="notes">Special requests</label>
+    <textarea id="notes" rows="2" placeholder="e.g. light sauce, cut in squares"></textarea>
+
+    <div class="builder-bottom">
+      <div>
+        <label for="qty">Quantity</label>
+        <input id="qty" type="number" min="1" max="10" value="1" class="qty-input">
+      </div>
+      <button id="add" class="large-button">Add to order</button>
+    </div>
+  </section>
+
+  <section class="cart-section">
+    <div class="section-heading compact"><div><span class="eyebrow">CART</span><h2>Your order</h2></div></div>
+    <div id="cart" class="muted">Nothing yet. Choose a pizza above.</div>
+  </section>
+
+  <section id="checkout" class="checkout-section">
+    <div class="section-heading compact"><div><span class="eyebrow">CHECKOUT</span><h2>Finish your order</h2></div></div>
+
+    <div class="checkout-grid">
+      <div class="checkout-form">
+        <h3>Customer information</h3>
+        <label for="name">Name</label><input id="name" type="text" autocomplete="name" placeholder="Your name">
+        <label for="phone">Phone</label><input id="phone" type="tel" autocomplete="tel" placeholder="(574) 555-0123">
+
+        <h3>Order type</h3>
+        <div class="choice-cards opts">
+          <label><input type="radio" name="ful" value="pickup" checked> <span><strong>Pickup</strong><small>Dorm kitchen</small></span></label>
+          <label><input type="radio" name="ful" value="delivery"> <span><strong>Delivery</strong><small>+$3 • South Bend only</small></span></label>
+        </div>
+        <div id="addrWrap" hidden><label for="address">Delivery address</label><input id="address" type="text" placeholder="123 Main St, South Bend, IN 46617"></div>
+
+        <h3>Payment</h3>
+        <select id="payment"><option value="card">Card (mock payment, no real charge)</option><option value="cash">Pay at pickup/delivery</option></select>
+
+        <h3>Promo code</h3>
+        <label for="coupon" class="sr-only">Coupon code</label>
+        <div class="row coupon-row"><input id="coupon" type="text" placeholder="Try GOIRISH"><button class="ghost" id="applyC">Apply</button></div>
+        <div id="err"></div>
+      </div>
+
+      <aside class="order-summary">
+        <h3>Order summary</h3>
+        <div id="summary"></div>
+        <hr>
+        <div class="summary-total"><span>Total</span><strong id="total">$0.00</strong></div>
+        <button id="place" class="large-button full-button">Place order</button>
+        <p class="tiny muted">Card payments are simulated for this class project.</p>
+      </aside>
+    </div>
+  </section>
+
+  <section id="track-order" class="track-lookup-section">
+    <div class="section-heading compact">
+      <div><span class="eyebrow">TRACK AN ORDER</span><h2>Check your pizza progress</h2></div>
+    </div>
+    <p class="muted">Enter the order number and phone number used at checkout. Your order page updates automatically while the kitchen works on it.</p>
+    <div class="track-lookup-grid">
+      <div>
+        <label for="trackOrderId">Order number</label>
+        <input id="trackOrderId" type="text" placeholder="P001" autocomplete="off">
+      </div>
+      <div>
+        <label for="trackPhone">Phone number</label>
+        <input id="trackPhone" type="tel" placeholder="(574) 555-0123" autocomplete="tel">
+      </div>
+      <button id="trackBtn" class="large-button">Track order</button>
+    </div>
+    <div id="trackErr"></div>
+  </section>
+
+  <section id="tracking" hidden>
+    <div class="section-heading compact"><div><span class="eyebrow">LIVE TRACKING</span><h2>Order <span id="oid"></span></h2></div></div>
+    <div id="tbody"></div>
+  </section>
+
+  <section id="past-orders">
+    <div class="section-heading compact"><div><span class="eyebrow">ORDER HISTORY</span><h2>Your past orders</h2></div></div>
+    <div id="past" class="muted">No past orders on this device yet.</div>
+  </section>
+</main>
+
+<footer><strong>🍕 PizzApp</strong><span>Dorm-kitchen pizza in South Bend.</span></footer>
+
+<script>
+const $=s=>document.querySelector(s); let M, cart=[], rate=0, trackId=null, timer=null;
+const LABEL={received:'Order received',preparing:'Preparing',in_oven:'In the oven',ready:'Ready',completed:'Done'};
+const PRESETS={cheese:[],pepperoni:['pepperoni'],hawaiian:['ham','pineapple'],custom:[]};
+const fmt=n=>'$'+n.toFixed(2), esc=s=>String(s).replace(/[&<>\"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','\"':'&quot;'}[c]));
+const past=()=>{try{return JSON.parse(localStorage.getItem('pizzapp_past')||'[]')}catch{return[]}};
+const itemPrice=i=>(M.sizes[i.size]+M.crusts[i.crust]+i.toppings.reduce((s,t)=>s+M.toppings[t],0))*i.qty;
+const desc=i=>`${i.qty}× ${i.size} ${i.crust} crust, cheese${i.toppings.map(t=>' + '+t).join('')}`;
+function totals(){const sub=cart.reduce((s,i)=>s+itemPrice(i),0),disc=sub*rate,fee=document.querySelector('[name=ful]:checked').value==='delivery'&&sub?M.deliveryFee:0;return{sub,disc,fee,total:sub-disc+fee}}
+function currentBuilderPrice(){
+  if(!M||!$('#size').value||!$('#crust').value)return 0;
+  const toppings=[...document.querySelectorAll('#toppings input:checked')].map(c=>c.value);
+  const qty=Math.max(1,parseInt($('#qty').value)||1);
+  return (M.sizes[$('#size').value]+M.crusts[$('#crust').value]+toppings.reduce((s,t)=>s+M.toppings[t],0))*qty;
+}
+function updateBuilderPrice(){if(M)$('#builderPrice').textContent=fmt(currentBuilderPrice())}
+function render(){
+  $('#cart').innerHTML=cart.length?cart.map((i,n)=>`<div class="cart-item"><div><strong>Pizza ${n+1}</strong><p>${esc(desc(i))}${i.notes?`<br><span class="muted">Note: ${esc(i.notes)}</span>`:''}</p></div><div class="cart-actions"><strong>${fmt(itemPrice(i))}</strong><div class="qty-controls"><button class="ghost mini" data-dec="${n}" aria-label="Decrease quantity">−</button><span>${i.qty}</span><button class="ghost mini" data-inc="${n}" aria-label="Increase quantity">+</button></div><button class="ghost mini" data-rm="${n}">Remove</button></div></div>`).join(''):'Nothing yet. Choose a pizza above.';
+  const t=totals();
+  $('#summary').innerHTML=`<div class="summary-line"><span>Subtotal</span><span>${fmt(t.sub)}</span></div>${t.disc?`<div class="summary-line savings"><span>Discount</span><span>−${fmt(t.disc)}</span></div>`:''}${t.fee?`<div class="summary-line"><span>Delivery</span><span>${fmt(t.fee)}</span></div>`:''}`;
+  $('#total').textContent=fmt(t.total);
+  const p=past();$('#past').innerHTML=p.length?p.slice(0,5).map((o,n)=>`<div class="past-order"><div><strong>${o.id}</strong><span>${esc(o.items.map(desc).join('; '))}</span></div><div class="past-actions"><button class="ghost" data-track-past="${n}">Track</button><button class="ghost" data-re="${n}">Reorder</button></div></div>`).join(''):'No past orders on this device yet.';
+}
+async function init(){
+  try{
+    M=await (await fetch('/api/menu')).json();
+    $('#size').innerHTML=Object.entries(M.sizes).map(([k,v])=>`<option value="${k}">${{S:'Small',M:'Medium',L:'Large'}[k]} (${fmt(v)})</option>`).join('');
+    $('#crust').innerHTML=Object.entries(M.crusts).map(([k,v])=>`<option value="${k}">${k[0].toUpperCase()+k.slice(1)}${v?` (+${fmt(v)})`:''}</option>`).join('');
+    $('#toppings').innerHTML=Object.entries(M.toppings).map(([k,v])=>`<label class="topping-option"><input type="checkbox" value="${k}"><span>${k[0].toUpperCase()+k.slice(1)}</span><small>+${fmt(v)}</small></label>`).join('');
+    $('#status').innerHTML=M.status.open?'':`<div class="msg err">${M.status.why}${M.strict?'':' (Demo mode: ordering still works.)'}</div>`;
+    document.querySelectorAll('#size,#crust,#qty').forEach(el=>el.addEventListener('input',updateBuilderPrice));
+    $('#toppings').addEventListener('change',updateBuilderPrice);
+    updateBuilderPrice(); render(); const last=readTracking(); if(last) track(last.id,last.phone,false);
+  }catch(e){
+    $('#status').innerHTML='<div class="msg err">Could not load the menu. Make sure you started the app with <strong>npm start</strong> and opened <strong>http://localhost:3000</strong>.</div>';
+  }
+}
+
+document.querySelectorAll('.preset').forEach(btn=>btn.addEventListener('click',()=>{
+  if(!M)return;
+  const wanted=PRESETS[btn.dataset.preset]||[];
+  document.querySelectorAll('#toppings input').forEach(c=>c.checked=wanted.includes(c.value));
+  $('#size').value='S'; $('#crust').value='regular'; $('#qty').value=1; $('#notes').value='';
+  updateBuilderPrice(); $('#builder').scrollIntoView({behavior:'smooth',block:'start'});
+}));
+
+$('#add').onclick=()=>{cart.push({size:$('#size').value,crust:$('#crust').value,toppings:[...document.querySelectorAll('#toppings input:checked')].map(c=>c.value),notes:$('#notes').value.trim(),qty:Math.max(1,parseInt($('#qty').value)||1)});$('#notes').value='';render();$('#checkout').scrollIntoView({behavior:'smooth',block:'start'})};
+document.body.addEventListener('click',e=>{
+  if(e.target.dataset.rm!==undefined){cart.splice(+e.target.dataset.rm,1);render()}
+  if(e.target.dataset.inc!==undefined){const i=cart[+e.target.dataset.inc];i.qty=Math.min(10,i.qty+1);render()}
+  if(e.target.dataset.dec!==undefined){const i=cart[+e.target.dataset.dec];i.qty=Math.max(1,i.qty-1);render()}
+  if(e.target.dataset.re!==undefined){cart=past()[+e.target.dataset.re].items.map(i=>({size:i.size,crust:i.crust,toppings:i.toppings,notes:i.notes,qty:i.qty}));render();$('#checkout').scrollIntoView({behavior:'smooth'})}
+  if(e.target.dataset.trackPast!==undefined){const o=past()[+e.target.dataset.trackPast];$('#trackOrderId').value=o.id;$('#trackPhone').value=o.phone||'';track(o.id,o.phone||'',true)}
+  if(e.target.dataset.star){rate_(+e.target.dataset.star)}
+});
+document.querySelectorAll('[name=ful]').forEach(r=>r.onchange=()=>{$('#addrWrap').hidden=document.querySelector('[name=ful]:checked').value!=='delivery';render()});
+$('#applyC').onclick=async()=>{const r=await (await fetch('/api/coupon?code='+encodeURIComponent($('#coupon').value))).json();rate=r.rate;$('#err').innerHTML=rate?`<div class="msg ok">Coupon applied: ${rate*100}% off.</div>`:'<div class="msg err">That coupon code is not valid.</div>';render()};
+$('#place').onclick=async()=>{
+  $('#err').innerHTML='';
+  const f=document.querySelector('[name=ful]:checked').value;
+  const res=await fetch('/api/orders',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({items:cart,name:$('#name').value,phone:$('#phone').value,fulfillment:f,address:$('#address').value,coupon:$('#coupon').value,payment:$('#payment').value})});
+  const o=await res.json(); if(!res.ok){$('#err').innerHTML=`<div class="msg err">${esc(o.error)}</div>`;return}
+  const previousOrders=past().filter(order=>order.id!==o.id);
+  localStorage.setItem('pizzapp_past',JSON.stringify([o,...previousOrders].slice(0,10)));
+  cart=[];rate=0;$('#coupon').value='';render();
+  $('#trackOrderId').value=o.id; $('#trackPhone').value=$('#phone').value;
+  $('#trackErr').innerHTML=`<div class="msg ok"><strong>Order placed!</strong> Your order number is <strong>${esc(o.id)}</strong>. Keep this number and the phone number you used to track your order from any device.</div>`;
+  track(o.id,$('#phone').value,true);
+};
+function readTracking(){
+  try{const raw=localStorage.getItem('pizzapp_track');if(!raw)return null;const x=JSON.parse(raw);return x&&x.id?x:null}catch{return null}
+}
+function track(id,phone,scroll=true){
+  trackId=String(id||'').trim().toUpperCase();
+  const cleanPhone=String(phone||'').trim();
+  if(!trackId||!cleanPhone)return;
+  localStorage.setItem('pizzapp_track',JSON.stringify({id:trackId,phone:cleanPhone}));
+  clearInterval(timer);poll(cleanPhone);timer=setInterval(()=>poll(cleanPhone),4000);
+  if(scroll)$('#tracking').scrollIntoView({behavior:'smooth',block:'start'});
+}
+async function poll(phone){
+  const saved=readTracking(); const p=phone||(saved&&saved.phone)||'';
+  const r=await fetch('/api/track/'+encodeURIComponent(trackId)+'?phone='+encodeURIComponent(p));
+  if(!r.ok){const e=await r.json().catch(()=>({}));clearInterval(timer);$('#tracking').hidden=true;$('#trackErr').innerHTML=`<div class="msg err">${esc(e.error||'We could not find that order. Check the order number and phone number.')}</div>`;return}
+  const o=await r.json(); $('#trackErr').innerHTML=''; $('#tracking').hidden=false; $('#oid').textContent=o.id;
+  const idx=Object.keys(LABEL).indexOf(o.status);
+  const ready=o.status==='ready'?`<div class="msg ok">${o.fulfillment==='pickup'?'Your pizza is ready for pickup!':'Your pizza is ready and about to head out for delivery.'}</div>`:'';
+  const fb=o.status==='completed'?(o.feedback?`<div class="review-thanks"><strong>Thanks for your feedback!</strong><p>You rated this ${'★'.repeat(o.feedback.rating)}.</p></div>`:`<div class="review-box"><h3>How was your pizza?</h3><div class="stars">${[1,2,3,4,5].map(n=>`<button data-star="${n}" aria-label="${n} stars">☆</button>`).join('')}</div><textarea id="cmt" rows="2" placeholder="Optional comment"></textarea><p class="muted tiny">Choose a star to submit your rating.</p></div>`):'';
+  $('#tbody').innerHTML=`<ol class="steps">${Object.entries(LABEL).map(([k,v],n)=>`<li class="${n<=idx?'done':''}"><span>${n<idx?'✓':n===idx?'●':'○'}</span>${v}</li>`).join('')}</ol>${ready}<div class="tracking-summary"><p>${esc(o.items.map(desc).join('; '))}</p><p>${o.fulfillment==='delivery'?'Delivery to '+esc(o.address):'Pickup at the dorm kitchen'} · Total ${fmt(o.total)} · ${esc(o.payment)}</p></div>${fb}`;
+  if(o.status==='completed'&&o.feedback)clearInterval(timer);
+}
+async function rate_(n){const saved=readTracking();const phone=saved&&saved.phone||'';const r=await fetch(`/api/orders/${trackId}/feedback`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({rating:n,comment:($('#cmt')||{}).value,phone})});if(r.ok)poll(phone)}
+$('#trackBtn').onclick=()=>{const id=$('#trackOrderId').value.trim().toUpperCase(),phone=$('#trackPhone').value.trim();$('#trackErr').innerHTML='';if(!id||!phone){$('#trackErr').innerHTML='<div class="msg err">Enter both your order number and phone number.</div>';return}track(id,phone,true)};
+const q=new URLSearchParams(location.search);if(q.get('track')){$('#trackOrderId').value=q.get('track').toUpperCase();setTimeout(()=>$('#track-order').scrollIntoView(),0)}
+init();
+</script>
+</body>
+</html>
